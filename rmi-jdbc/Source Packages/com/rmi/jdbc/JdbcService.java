@@ -14,6 +14,7 @@ public interface JdbcService extends Remote {
 	public String update(int id, String name, String gender)
 			throws RemoteException;
 
+	@SuppressWarnings("rawtypes")
 	public ArrayList search(int id) throws RemoteException;
 
 }
