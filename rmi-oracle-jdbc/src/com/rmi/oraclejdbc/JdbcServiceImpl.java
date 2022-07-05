@@ -2,6 +2,7 @@ package com.rmi.oraclejdbc;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,15 +30,19 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 	public String insert(int id, String name, String gender)
 			throws RemoteException {
 
+		System.out.println("Inside jdbcimpl class !!");
+
 		String sql = "";
 
 		try {
-			System.out.println("Inside jdbcimpl class !!");
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521:XE", "jdbc_db", "1234");
-			Statement st = con.createStatement();
-			con.setAutoCommit(false);
+			// Class.forName("oracle.jdbc.driver.OracleDriver");
+			// Connection con = DriverManager.getConnection(
+			// "jdbc:oracle:thin:@localhost:1521:XE", "jdbc_db", "1234");
+			// Statement st = con.createStatement();
+			// con.setAutoCommit(false);
+
+			Statement st = OracleConnection.getConnection().createStatement();
+			OracleConnection.getConnection().setAutoCommit(false);
 			System.out
 					.println("Query should be like : "
 							+ "insert into student (id, name, gender) values (2, 'simba', 'male')");
@@ -50,8 +55,11 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 			System.out.println("Record inserted successfully !!");
 
 			st.close();
-			con.commit();
-			con.close();
+			// con.commit();
+			// con.close();
+
+			OracleConnection.getConnection().commit();
+			OracleConnection.closeConnection();
 			return "Record Inserted Successfully !!";
 		} catch (Exception e) {
 			System.out.println("query : " + sql);
@@ -61,7 +69,40 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 	}
 
 	@Override
+	public String insertUsingProcedure(int collegeId, String collegeName,
+			String university) throws RemoteException {
+
+		System.out.println("Inside jdbcimpl class !!");
+
+		try {
+
+			CallableStatement cs = OracleConnection.getConnection()
+					.prepareCall("{call insertcollege(?,?,?)}");
+
+			cs.setInt(1, collegeId);
+			cs.setString(2, collegeName);
+			cs.setString(3, university);
+
+			boolean b = cs.execute();
+			if (!b) {
+				System.out.println("Procedure Called and store value!!");
+			} else {
+				System.out.println("Procedure Not Called !!");
+			}
+			cs.close();
+			OracleConnection.getConnection().commit();
+			OracleConnection.closeConnection();
+			return "Record Inserted Successfully using procedure!!";
+		} catch (Exception e) {
+			return e.toString();
+		}
+	}
+
+	@Override
 	public String delete(int id) throws RemoteException {
+
+		System.out.println("Inside jdbcimpl class !!");
+
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			Connection con = DriverManager.getConnection(
@@ -108,15 +149,14 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 	@Override
 	public ArrayList search(int id) throws RemoteException {
 
+		System.out.println("Inside jdbcimpl class !!");
+
 		ArrayList student = new ArrayList();
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection con = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521/XE", "jdbc_db", "1234");
-
-			Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-					ResultSet.CONCUR_UPDATABLE);
+			Statement st = OracleConnection.getConnection()
+					.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+							ResultSet.CONCUR_UPDATABLE);
 			ResultSet rs = st.executeQuery("select * from student where id="
 					+ id);
 
@@ -129,12 +169,48 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 			}
 			rs.close();
 			st.close();
-			con.close();
+			OracleConnection.closeConnection();
 			System.out.println("Data fetch successfully !!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return student;
+	}
+
+	@Override
+	public ArrayList<Student> findAll() throws RemoteException {
+
+		System.out.println("Inside jdbcimpl class !!");
+
+		ArrayList<Student> studentlist = new ArrayList<Student>();
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Connection con = DriverManager.getConnection(
+					"jdbc:oracle:thin:@localhost:1521/XE", "jdbc_db", "1234");
+
+			Statement st = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+					ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = st.executeQuery("select * from student");
+
+			while (rs.next()) {
+				System.out.println("ID : " + rs.getInt(1) + " || Name : "
+						+ rs.getString(2) + " || Gender : " + rs.getString(3));
+				Student student = new Student();
+				student.setId(rs.getInt("id"));
+				student.setName(rs.getString("name"));
+				student.setGender(rs.getString("gender"));
+				studentlist.add(student);
+			}
+			System.out.println("Student List : " + studentlist);
+			rs.close();
+			st.close();
+			con.close();
+			System.out.println("All Data fetch successfully !!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return studentlist;
 	}
 
 }
