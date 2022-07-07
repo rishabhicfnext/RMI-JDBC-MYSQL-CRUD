@@ -177,12 +177,15 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 		return student;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ArrayList<Student> findAll() throws RemoteException {
-
+	public ArrayList findAllStudent() throws RemoteException {
+		
 		System.out.println("Inside jdbcimpl class !!");
 
-		ArrayList<Student> studentlist = new ArrayList<Student>();
+		ArrayList studentlist = new ArrayList();
+
+		ArrayList student = new ArrayList();
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -196,13 +199,17 @@ public class JdbcServiceImpl extends UnicastRemoteObject implements JdbcService 
 			while (rs.next()) {
 				System.out.println("ID : " + rs.getInt(1) + " || Name : "
 						+ rs.getString(2) + " || Gender : " + rs.getString(3));
-				Student student = new Student();
-				student.setId(rs.getInt("id"));
-				student.setName(rs.getString("name"));
-				student.setGender(rs.getString("gender"));
-				studentlist.add(student);
+				 Student students = new Student();
+				 students.setId(rs.getInt("id"));
+				 students.setName(rs.getString("name"));
+				 students.setGender(rs.getString("gender"));
+				 studentlist.add(students);
+				student.add(rs.getInt(1));
+				student.add(rs.getString(2));
+				student.add(rs.getString(3));
+				studentlist.addAll(student);
 			}
-			System.out.println("Student List : " + studentlist);
+			System.out.println("Student List : " + studentlist.toString());
 			rs.close();
 			st.close();
 			con.close();

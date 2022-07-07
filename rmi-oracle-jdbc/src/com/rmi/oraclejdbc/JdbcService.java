@@ -17,7 +17,8 @@ public interface JdbcService extends Remote {
 	@SuppressWarnings("rawtypes")
 	public ArrayList search(int id) throws RemoteException;
 
-	public ArrayList<Student> findAll() throws RemoteException;
+	@SuppressWarnings("rawtypes")
+	public ArrayList findAllStudent() throws RemoteException;
 
 	public String insertUsingProcedure(int collegeId, String collegeName,
 			String university) throws RemoteException;

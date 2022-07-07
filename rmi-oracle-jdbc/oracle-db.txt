@@ -12,30 +12,19 @@ Step 5: documentation of oracle 11g : https://docs.oracle.com/cd/E17781_01/admin
 
 Step 6: first create user and password then create table
 
-command : 
+command : create table student (id int, name varchar2(20), gender varchar2(20));
+command : describe student;
+command : insert into student (id, name, gender) values (1, 'rishabh', 'male');
+command : select * from student order by id asc;
+command : select * from student order by id desc;
+command : select * from student;
 
-create table student (id int, name varchar2(20), gender varchar2(20));
-
-describe student;
-
-insert into student (id, name, gender) values (1, 'rishabh', 'male');
-
-select * from student order by id asc;
-
-select * from student order by id desc;
-
-select * from student;
-
-create table college (id int, name varchar2(20), university varchar2(20));
-
-desc college;
-
-alter table college rename column id to collegeid;
-alter table college rename column name to collegename;
-
-insert into college values (1, 'PSIT', 'AKTU');
-
-select * from college;
+command : create table college (id int, name varchar2(20), university varchar2(20));
+command : desc college;
+command : alter table college rename column id to collegeid;
+command : alter table college rename column name to collegename;
+command : insert into college values (1, 'PSIT', 'AKTU');
+command : select * from college;
 
 /* Creating Procedure */
 

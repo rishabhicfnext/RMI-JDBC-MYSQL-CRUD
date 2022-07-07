@@ -22,7 +22,8 @@ public class Client {
 
 		Scanner sc = new Scanner(System.in);
 
-		do {
+		int flag = 1;
+		while(flag != 0) {
 
 			int choice;
 
@@ -124,10 +125,12 @@ public class Client {
 					jdbcService = (JdbcService) Naming
 							.lookup("rmi://localhost:4000/db");
 
-					ArrayList<Student> result = jdbcService.findAll();
+					ArrayList result = jdbcService.findAllStudent();
 
-					for (Student s : result)
-						System.out.println(s);
+					/*
+					 * for (Student s : result) System.out.println(s);
+					 */
+					System.out.println(result.toString());
 					logger.info("exiting print all method..");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -161,6 +164,10 @@ public class Client {
 				System.out.println("Wrong choice");
 				System.exit(0);
 			}
-		} while (true);
+			System.out.println("Do you want to continue : ");
+			System.out.println("1. for continue");
+			System.out.println("0. for exit");
+			flag = sc.nextInt();
+		}
 	}
 }
