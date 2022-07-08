@@ -1,0 +1,152 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from JdbcServiceImplService WSDL service -->
+
+  <service name="JdbcServiceImpl" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://DefaultNamespace"/>
+      <parameter name="wsdlServiceElement" value="JdbcServiceImplService"/>
+      <parameter name="schemaQualified" value="http://DefaultNamespace"/>
+      <parameter name="wsdlServicePort" value="JdbcServiceImpl"/>
+      <parameter name="className" value="DefaultNamespace.JdbcServiceImplSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="JdbcServiceImpl"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="delete" qname="operNS:delete" xmlns:operNS="http://DefaultNamespace" returnQName="retNS:deleteReturn" xmlns:retNS="http://DefaultNamespace" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://DefaultNamespace" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="insert" qname="operNS:insert" xmlns:operNS="http://DefaultNamespace" returnQName="retNS:insertReturn" xmlns:retNS="http://DefaultNamespace" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://DefaultNamespace" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:name" xmlns:pns="http://DefaultNamespace" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:gender" xmlns:pns="http://DefaultNamespace" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="search" qname="operNS:search" xmlns:operNS="http://DefaultNamespace" returnQName="retNS:searchReturn" xmlns:retNS="http://DefaultNamespace" returnType="rtns:ArrayOf_xsd_anyType" xmlns:rtns="http://DefaultNamespace" returnItemQName="tns:item" xmlns:tns="http://DefaultNamespace" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://DefaultNamespace" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="update" qname="operNS:update" xmlns:operNS="http://DefaultNamespace" returnQName="retNS:updateReturn" xmlns:retNS="http://DefaultNamespace" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://DefaultNamespace" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:name" xmlns:pns="http://DefaultNamespace" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:gender" xmlns:pns="http://DefaultNamespace" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="insertUsingProcedure" qname="operNS:insertUsingProcedure" xmlns:operNS="http://DefaultNamespace" returnQName="retNS:insertUsingProcedureReturn" xmlns:retNS="http://DefaultNamespace" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:collegeId" xmlns:pns="http://DefaultNamespace" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:collegeName" xmlns:pns="http://DefaultNamespace" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:university" xmlns:pns="http://DefaultNamespace" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="findAllStudent" qname="operNS:findAllStudent" xmlns:operNS="http://DefaultNamespace" returnQName="retNS:findAllStudentReturn" xmlns:retNS="http://DefaultNamespace" returnType="rtns:ArrayOf_xsd_anyType" xmlns:rtns="http://DefaultNamespace" returnItemQName="tns:item" xmlns:tns="http://DefaultNamespace" soapAction="" >
+      </operation>
+      <parameter name="allowedMethods" value="update search delete insertUsingProcedure findAllStudent insert"/>
+
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>insertResponse"
+        type="java:DefaultNamespace.InsertResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>update"
+        type="java:DefaultNamespace.Update"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>findAllStudentResponse"
+        type="java:DefaultNamespace.FindAllStudentResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>findAllStudent"
+        type="java:DefaultNamespace.FindAllStudent"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>updateResponse"
+        type="java:DefaultNamespace.UpdateResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>insert"
+        type="java:DefaultNamespace.Insert"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:ArrayOf_xsd_anyType"
+        type="java:java.lang.Object[]"
+        innerType="cmp-ns:anyType" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>insertUsingProcedureResponse"
+        type="java:DefaultNamespace.InsertUsingProcedureResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>search"
+        type="java:DefaultNamespace.Search"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>searchResponse"
+        type="java:DefaultNamespace.SearchResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>insertUsingProcedure"
+        type="java:DefaultNamespace.InsertUsingProcedure"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>delete"
+        type="java:DefaultNamespace.Delete"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://DefaultNamespace"
+        qname="ns:>deleteResponse"
+        type="java:DefaultNamespace.DeleteResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>
